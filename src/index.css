@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:700');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto Mono', "Courier New", sans-serif;
+  background: linear-gradient(to right, rgb(66, 251, 227), rgb(43, 43, 255));
+  background-size: 200%;
+  animation: bg 45s infinite;
+}
+
+button {
+  cursor: pointer;
+}
+
+@keyframes bg {
+  0% {
+    background-position: 40% 50%;
+  }
+  25% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 40% 50%;
+  }
+  75% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 40% 50%;
+  }
+}

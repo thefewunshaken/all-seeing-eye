@@ -1,0 +1,20 @@
+.form {
+  width: 700px;
+  background:
+  radial-gradient(#111 3px, transparent 5px, #111 7px, transparent 9px, #111 11px, transparent 13px, #111 15px, transparent 17px, #111 19px, transparent 21px, #111 23px, transparent 25px, #111 27px, transparent 29px, #111 31px, transparent 33px);
+background-color: #fff;
+background-size: 30px 30px;
+}
+
+input {
+  border: none;
+  background: #111;
+  color: white;
+  /* color: #6F6F6F; */
+  /* background: linear-gradient(to right, rgb(66, 251, 227), rgb(43, 43, 
+  255));
+  -webkit-background-clip: text;
+  background-clip:text;
+  -webkit-text-fill-color: transparent;
+  width:1000px; */
+}
