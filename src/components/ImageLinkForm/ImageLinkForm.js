@@ -15,7 +15,6 @@ const ImageLinkForm = ({ onInputChange, onPictureSubmit }) => {
             placeholder="https://"
             onChange={onInputChange}
           />
-          {/* http://www.exmooradventures.co.uk/wp-content/uploads/2013/01/DSCN59891.jpg */}
           <button className="w-30 grow f4 link ph3 pv2 diib" onClickCapture={onPictureSubmit}>Detect</button>
         </div>
       </div>
