@@ -60,6 +60,7 @@ const particlesOptions = {
       }
   }
 };
+const serverEndpoint = 'https://all-seeing-eye-api.herokuapp.com';
 
 // https://api.time.com/wp-content/uploads/2017/12/terry-crews-person-of-year-2017-time-magazine-2.jpg
 
@@ -135,8 +136,7 @@ function App() {
 
   const postToClarifai = async () => {
     try {
-      const server = 'http://localhost:3005';
-      const response = await fetch(`${server}/image`,
+      const response = await fetch(`${serverEndpoint}/image`,
         {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
@@ -172,8 +172,7 @@ function App() {
   const updateUserEntires = async () => {
     try {
       console.log(user);
-      const server = 'http://localhost:3005';
-      const result = await fetch(`${server}/update-entries`,
+      const result = await fetch(`${serverEndpoint}/update-entries`,
         {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
@@ -199,8 +198,8 @@ function App() {
       <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
       <Logo />
       {
-        route === 'signin' ? <SignIn onRouteChange={onRouteChange} initializeActiveUser={initializeActiveUser} />
-          : route === 'signup' ? <SignUp onRouteChange={onRouteChange} initializeActiveUser={initializeActiveUser} />
+        route === 'signin' ? <SignIn onRouteChange={onRouteChange} initializeActiveUser={initializeActiveUser} serverEndpoint={serverEndpoint} />
+          : route === 'signup' ? <SignUp onRouteChange={onRouteChange} initializeActiveUser={initializeActiveUser} serverEndpoint={serverEndpoint} />
             : <>
               <Rank user={user} />
               <ImageLinkForm onInputChange={onInputChange} onPictureSubmit={onPictureSubmit}/>

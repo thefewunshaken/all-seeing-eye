@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PopInBelow } from '../CustomEffects/PopIn';
 
-const SignUp = ({ onRouteChange, initializeActiveUser }) => {
+const SignUp = ({ onRouteChange, initializeActiveUser, serverEndpoint }) => {
   const [signUpForm, setSignUpForm] = useState({
     firstName: '',
     lastName: '',
@@ -67,7 +67,7 @@ const SignUp = ({ onRouteChange, initializeActiveUser }) => {
       }
   
       if(allFieldsAreValid) {
-        const response = await fetch('http://localhost:3005/signup', {
+        const response = await fetch(`${serverEndpoint}/signup`, {
           method: 'post',
           headers: {
             'Content-Type': 'application/json'

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PopInBelow } from '../CustomEffects/PopIn';
 
-const SignIn = ({ onRouteChange, initializeActiveUser }) => {
+const SignIn = ({ onRouteChange, initializeActiveUser, serverEndpoint }) => {
   const [signInForm, setSignInForm] = useState({
     email: '',
     plainTextPassword: ''
@@ -56,7 +56,7 @@ const SignIn = ({ onRouteChange, initializeActiveUser }) => {
         return;
       }
   
-      const response = await fetch('http://localhost:3005/signin', {
+      const response = await fetch(`${serverEndpoint}/signin`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json'
