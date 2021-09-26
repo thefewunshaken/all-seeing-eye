@@ -87,7 +87,6 @@ function App(props) {
   const [boundingBoxes, setBoundingBoxes] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [imageDataIsLoaded, setImageDataIsLoaded] = useState(false);
 
   useEffect(() => {
     
@@ -96,7 +95,6 @@ function App(props) {
       setUser({});
       setBoundingBoxes('');
       setImageData({});
-      setImageDataIsLoaded(false);
     } else {
       setIsSignedIn(true);
     }
@@ -152,13 +150,11 @@ function App(props) {
       );
       const imageResults = await response.json();
 
-      setImageDataIsLoaded(true);
       setImageData(imageResults);
       displayBoundingBoxOnFaces(calculateFaceLocation(imageResults));
 
     }
     catch (error) {
-      setImageDataIsLoaded(false);
       console.log(error);
     }
   }
