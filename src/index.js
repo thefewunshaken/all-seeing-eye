@@ -1,14 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import { createLogger } from 'redux-logger';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'tachyons';
 import { image } from './reducers';
 
-const store = createStore(image);
+let store;
+
+if (process.env.NODE_ENV === 'development') {
+  const logger = createLogger();
+  store = createStore(image, applyMiddleware(logger));
+} else {
+  store = createStore(image);
+}
+
 
 ReactDOM.render(
   <React.StrictMode>
