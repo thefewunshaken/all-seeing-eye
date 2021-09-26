@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/all-seeing-eye/static/css/main.8f86eb06.chunk.css",
+    "main.js": "/all-seeing-eye/static/js/main.8c5df7a2.chunk.js",
+    "main.js.map": "/all-seeing-eye/static/js/main.8c5df7a2.chunk.js.map",
+    "runtime-main.js": "/all-seeing-eye/static/js/runtime-main.245329a5.js",
+    "runtime-main.js.map": "/all-seeing-eye/static/js/runtime-main.245329a5.js.map",
+    "static/css/2.fe359a49.chunk.css": "/all-seeing-eye/static/css/2.fe359a49.chunk.css",
+    "static/js/2.c24c06b4.chunk.js": "/all-seeing-eye/static/js/2.c24c06b4.chunk.js",
+    "static/js/2.c24c06b4.chunk.js.map": "/all-seeing-eye/static/js/2.c24c06b4.chunk.js.map",
+    "static/js/3.0c337414.chunk.js": "/all-seeing-eye/static/js/3.0c337414.chunk.js",
+    "static/js/3.0c337414.chunk.js.map": "/all-seeing-eye/static/js/3.0c337414.chunk.js.map",
+    "index.html": "/all-seeing-eye/index.html",
+    "static/css/2.fe359a49.chunk.css.map": "/all-seeing-eye/static/css/2.fe359a49.chunk.css.map",
+    "static/css/main.8f86eb06.chunk.css.map": "/all-seeing-eye/static/css/main.8f86eb06.chunk.css.map",
+    "static/js/2.c24c06b4.chunk.js.LICENSE.txt": "/all-seeing-eye/static/js/2.c24c06b4.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.245329a5.js",
+    "static/css/2.fe359a49.chunk.css",
+    "static/js/2.c24c06b4.chunk.js",
+    "static/css/main.8f86eb06.chunk.css",
+    "static/js/main.8c5df7a2.chunk.js"
+  ]
+}
