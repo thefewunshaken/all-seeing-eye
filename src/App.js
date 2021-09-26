@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import Navigation from './components/Navigation/Navigation';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Logo from './components/Logo/Logo';
@@ -8,6 +9,20 @@ import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import './App.css';
 import Particles from 'react-particles-js';
+
+import { setImageUrl } from './actions';
+
+const mapStateToProps = (state) => {
+  return {
+    imageUrl: state.imageUrl
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onInputChange: (event) => dispatch(setImageUrl(event.target.value))
+  }
+}
 
 const particlesOptions = {
   particles: {
@@ -65,10 +80,9 @@ const serverEndpoint = process.env.REACT_APP_SERVER_ENDPOINT;
 
 // https://api.time.com/wp-content/uploads/2017/12/terry-crews-person-of-year-2017-time-magazine-2.jpg
 
-function App() {
+function App(props) {
+  const { onInputChange, imageUrl } = props;
   const [user, setUser] = useState({});
-  const [urlInput, setUrlInput] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
   const [imageData, setImageData] = useState({});
   const [boundingBoxes, setBoundingBoxes] = useState({});
   const [route, setRoute] = useState('signin');
@@ -76,13 +90,10 @@ function App() {
   const [imageDataIsLoaded, setImageDataIsLoaded] = useState(false);
 
   useEffect(() => {
-    console.log(route);
     
     if (route.match(/^(?:sign)(?:out|in|up)/gm)) {
       setIsSignedIn(false);
       setUser({});
-      setUrlInput('');
-      setImageUrl('');
       setBoundingBoxes('');
       setImageData({});
       setImageDataIsLoaded(false);
@@ -90,11 +101,6 @@ function App() {
       setIsSignedIn(true);
     }
   }, [route])
-
-  const onInputChange = (e) => {
-    setImageUrl('');
-    setUrlInput(e.target.value);
-  }
 
   const calculateFaceLocation = results => {
     console.log('calculateFaceLocation called');
@@ -141,7 +147,7 @@ function App() {
         {
           method: 'post',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ url: urlInput })
+          body: JSON.stringify({ url: imageUrl })
         }
       );
       const imageResults = await response.json();
@@ -158,9 +164,8 @@ function App() {
   }
 
   const onPictureSubmit = () => {
-    if (urlInput) {
+    if (imageUrl) {
       console.log('onButtonSubmit called');
-      setImageUrl(urlInput);
       postToClarifai();
       updateUserEntires();
     }
@@ -172,7 +177,6 @@ function App() {
 
   const updateUserEntires = async () => {
     try {
-      console.log(user);
       const result = await fetch(`${serverEndpoint}/update-entries`,
         {
           method: 'post',
@@ -212,4 +216,4 @@ function App() {
   );
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
