@@ -1,254 +1,215 @@
-import React, { Component } from 'react';
-import Particles from 'react-particles-js';
+import { useState, useEffect } from 'react';
 import Navigation from './components/Navigation/Navigation';
-import SignIn from './components/SignIn/SignIn';
-import Register from './components/Register/Register';
-import Logo from './components/Logo/Logo';
-import Rank from './components/Rank/Rank';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import Logo from './components/Logo/Logo';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Rank from './components/Rank/Rank';
+import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp';
 import './App.css';
+import Particles from 'react-particles-js';
 
-const particlesParams = {
-  "particles": {
-    "number": {
-      "value": 33,
-      "density": {
-        "enable": true,
-        "value_area": 710.2328774690454
-      }
-    },
-    "color": {
-      "value": "#ffffff"
-    },
-    "shape": {
-      "type": "circle",
-      "stroke": {
-        "width": 0,
-        "color": "#000000"
-      },
-      "polygon": {
-        "nb_sides": 7
-      },
-      "image": {
-        "src": "img/github.svg",
-        "width": 100,
-        "height": 100
-      }
-    },
-    "opacity": {
-      "value": 0.5,
-      "random": false,
-      "anim": {
-        "enable": false,
-        "speed": 1,
-        "opacity_min": 0.1,
-        "sync": false
-      }
-    },
-    "size": {
-      "value": 11.83721462448409,
-      "random": true,
-      "anim": {
-        "enable": false,
-        "speed": 40,
-        "size_min": 0.1,
-        "sync": false
-      }
-    },
-    "line_linked": {
-      "enable": true,
-      "distance": 150,
-      "color": "#ffffff",
-      "opacity": 0.4,
-      "width": 1
-    },
-    "move": {
-      "enable": true,
-      "speed": 6,
-      "direction": "none",
-      "random": false,
-      "straight": false,
-      "out_mode": "out",
-      "bounce": false,
-      "attract": {
-        "enable": false,
-        "rotateX": 600,
-        "rotateY": 1200
-      }
-    }
-  },
-  "interactivity": {
-    "detect_on": "window",
-    "events": {
-      "onhover": {
-        "enable": false,
-        "mode": "repulse"
-      },
-      "onclick": {
-        "enable": false,
-        "mode": "bubble"
-      },
-      "resize": true
-    },
-    "modes": {
-      "grab": {
-        "distance": 400,
-        "line_linked": {
-          "opacity": 1
+const particlesOptions = {
+  particles: {
+    number: {
+        value: 160,
+        density: {
+            enable: false
         }
-      },
-      "bubble": {
-        "distance": 400,
-        "size": 40,
-        "duration": 2,
-        "opacity": 8,
-        "speed": 3
-      },
-      "repulse": {
-        "distance": 200,
-        "duration": 0.4
-      },
-      "push": {
-        "particles_nb": 4
-      },
-      "remove": {
-        "particles_nb": 2
-      }
+    },
+    size: {
+        value: 3,
+        random: true,
+        anim: {
+            speed: 4,
+            size_min: 0.3
+        }
+    },
+    line_linked: {
+        enable: false
+    },
+    move: {
+        random: true,
+        speed: 1,
+        direction: 'top',
+        out_mode: 'out'
     }
   },
-  "retina_detect": true
-}
-
-let initialState = {
-  input: '',
-  imageUrl: '',
-  box: [],
-  route: 'signin',
-  isSignedIn: false,
-  user: {
-    id: '',
-    name: '',
-    email: '',
-    entries: 0,
-    joined: ''
-  }
-}
-
-class App extends Component {
-  constructor() {
-    super();
-    this.state = initialState;
-  }
-
-  loadUser = (user) => {
-    this.setState({user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      entries: user.entries,
-      joined: user.joined
-    }});
-  }
-
-  calculateFaceLocation = (data) => {
-    const clarifaiFaces = data.outputs[0].data.regions;
-    const image = document.getElementById('inputImg');
-    const width = Number(image.width);
-    const height = Number(image.height);
-    const faces = clarifaiFaces.map((face, i) => {
-      const coords = face.region_info.bounding_box;
-      return(
-        <div
-          key={i}
-          className="bounding-box"
-          style={{top: `${coords.top_row*height}px`,
-                  left: `${coords.left_col*width}px`,
-                  bottom: `${height-(coords.bottom_row*height)}px`,
-                  right: `${width-(coords.right_col*width)}px`}}>
-        </div>
-      );
-    });
-    return faces;
-  }
-
-  renderBoundingBox = (boundingBox) => {
-    this.setState({box: boundingBox});
-  }
-
-  onInputChange = (event) => {
-    const userInput = event.target.value;
-    this.setState({imageUrl: ''});
-    this.setState({input: userInput});
-    this.setState({box: ''});
-  }
-
-  onPictureSubmit = () => {
-    this.setState({imageUrl: this.state.input});
-    fetch('http://localhost:3001/imageurl', {
-      method: 'post',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        input: this.state.input
-      })
-    })
-    .then(response => response.json())
-    .then(response => {
-      if (response) {
-        fetch('http://localhost:3001/image', {
-          method: 'put',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            id: this.state.user.id
-          })
-        })
-        .then(response => response.json())
-        .then(count => {
-          this.setState(Object.assign(this.state.user, {entries: count}))
-        })
-        .catch(console.log)
-
+  interactivity: {
+      events: {
+          onhover: {
+              enable: true,
+              mode: 'bubble'
+          },
+          onclick: {
+              enable: true,
+              mode: 'repulse'
+          }
+      },
+      modes: {
+          bubble: {
+              distance: 250,
+              duration: 2,
+              size: 0,
+              opacity: 0
+          },
+          repulse: {
+              distance: 400,
+              duration: 4
+          }
       }
-      this.renderBoundingBox(this.calculateFaceLocation(response))
-    })
-    .catch(err => console.log(err.statusText));
   }
+};
 
-  onRouteChange = (route) => {
-    if (route === 'home') {
-      this.setState({isSignedIn: true});
+// https://api.time.com/wp-content/uploads/2017/12/terry-crews-person-of-year-2017-time-magazine-2.jpg
+
+function App() {
+  const [user, setUser] = useState({});
+  const [urlInput, setUrlInput] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageData, setImageData] = useState({});
+  const [boundingBoxes, setBoundingBoxes] = useState({});
+  const [route, setRoute] = useState('signin');
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [imageDataIsLoaded, setImageDataIsLoaded] = useState(false);
+
+  useEffect(() => {
+    console.log(route);
+    
+    if (route.match(/^(?:sign)(?:out|in|up)/gm)) {
+      setIsSignedIn(false);
+      setUser({});
+      setUrlInput('');
+      setImageUrl('');
+      setBoundingBoxes('');
+      setImageData({});
+      setImageDataIsLoaded(false);
     } else {
-      this.setState(initialState);
+      setIsSignedIn(true);
     }
-    this.setState({route: route});
+  }, [route])
+
+  const onInputChange = (e) => {
+    setImageUrl('');
+    setUrlInput(e.target.value);
   }
 
-  render() {
-    const { isSignedIn, imageUrl, route, box } = this.state;
-    const { name, entries } = this.state.user;
-    return (
-      <div className="App">
-        <Particles className="particles" params={particlesParams} />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
-        { route === 'home'
-          ? <div>
-              <Logo />
-              <Rank name={name} entries={entries}/>
-              <ImageLinkForm
-                onInputChange={this.onInputChange}
-                onPictureSubmit={this.onPictureSubmit}
-              />
-              <FaceRecognition imageUrl={imageUrl} boundingBox={box}/>
-            </div>
-          : (
-            route === 'signin'
-            ? <SignIn onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
-            : <Register onRouteChange={this.onRouteChange} loadUser={this.loadUser}/>
-          )
-        }
-      </div>
-    );
+  const calculateFaceLocation = results => {
+    console.log('calculateFaceLocation called');
+    console.log(results);
+    let boundingBoxes = [];
+    // data.regions[].data.concepts
+    // data[2] is multicultural model
+    if (results[2].data.regions.length) {
+      results[2].data.regions.forEach(region => {
+        boundingBoxes.push(region.region_info.bounding_box)
+      });
+    }
+    // const clarifaiBoundingBox = data[2].data.regions[0].region_info.bounding_box;
+    
+    const image = document.getElementById('input-image');
+    // const width = Number(image.width);
+    // const height = Number(image.height);
+
+    // * API currently returns coords as decimal percentage values
+    boundingBoxes.forEach(box => {
+      box.left_col = `${box.left_col * 100}%`;
+      box.top_row = `${box.top_row * 100}%`;
+      box.right_col = `${(1 - box.right_col) * 100}%`;
+      box.bottom_row = `${(1 - box.bottom_row) * 100}%`;
+    })
+    // * leaving here in case API updates in the future to return coords as pixel value
+    // boundingBoxes.forEach(box => {
+    //   box.left_col = `${(box.left_col / width) * 100}%`;
+    //   box.top_row = `${(box.top_row / height) * 100}%`;
+    //   box.right_col = `${((width - box.right_col) / width) * 100}`;
+    //   box.bottom_row = `${((height - box.bottom_row) / height) * 100}`;
+    // })
+
+    return boundingBoxes;
   }
+
+  const displayBoundingBoxOnFaces = boxArray => {
+    setBoundingBoxes(boxArray);
+  }
+
+  const postToClarifai = async () => {
+    try {
+      const server = 'http://localhost:3005';
+      const response = await fetch(`${server}/image`,
+        {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ url: urlInput })
+        }
+      );
+      const imageResults = await response.json();
+
+      setImageDataIsLoaded(true);
+      setImageData(imageResults);
+      displayBoundingBoxOnFaces(calculateFaceLocation(imageResults));
+
+    }
+    catch (error) {
+      setImageDataIsLoaded(false);
+      console.log(error);
+    }
+  }
+
+  const onPictureSubmit = () => {
+    if (urlInput) {
+      console.log('onButtonSubmit called');
+      setImageUrl(urlInput);
+      postToClarifai();
+      updateUserEntires();
+    }
+  }
+
+  const onRouteChange = (route) => {
+    setRoute(route);
+  }
+
+  const updateUserEntires = async () => {
+    try {
+      console.log(user);
+      const server = 'http://localhost:3005';
+      const result = await fetch(`${server}/update-entries`,
+        {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ userUUID: user.uuid, entries: user.entries })
+        }
+      );
+      const entriesJson = await result.json();
+      setUser({...user, entries: entriesJson.entries});
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  const initializeActiveUser = user => {
+    console.log(user);
+    setUser(user);
+  };
+
+  return (
+    <div className="App flex flex-column pt1">
+      <Particles params={particlesOptions} className="particles" />
+      <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
+      <Logo />
+      {
+        route === 'signin' ? <SignIn onRouteChange={onRouteChange} initializeActiveUser={initializeActiveUser} />
+          : route === 'signup' ? <SignUp onRouteChange={onRouteChange} initializeActiveUser={initializeActiveUser} />
+            : <>
+              <Rank user={user} />
+              <ImageLinkForm onInputChange={onInputChange} onPictureSubmit={onPictureSubmit}/>
+              <FaceRecognition image={imageUrl} boundingBoxes={boundingBoxes}/>
+              <div className="tc">Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+            </>
+      }
+    </div>
+  );
 }
 
 export default App;
