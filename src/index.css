@@ -1,36 +1,46 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono:700');
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  --light-gray: #e3e3e3;
+  --green: #61E294;
 }
 
 body {
-  font-family: 'Roboto Mono', "Courier New", sans-serif;
-  background: linear-gradient(to right, rgb(66, 251, 227), rgb(43, 43, 255));
-  background-size: 200%;
-  animation: bg 45s infinite;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+background: hsla(202, 100%, 50%, 1);
+background: linear-gradient(-225deg, hsla(202, 100%, 50%, 1) 0%, hsla(240, 46%, 31%, 1) 64%, hsla(216, 7%, 15%, 1) 100%);
+background: -moz-linear-gradient(-225deg, hsla(202, 100%, 50%, 1) 0%, hsla(240, 46%, 31%, 1) 64%, hsla(216, 7%, 15%, 1) 100%);
+background: -webkit-linear-gradient(-225deg, hsla(202, 100%, 50%, 1) 0%, hsla(240, 46%, 31%, 1) 64%, hsla(216, 7%, 15%, 1) 100%);
+filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#009FFD", endColorstr="#2A2A72", GradientType=1 );
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 button {
   cursor: pointer;
 }
 
-@keyframes bg {
-  0% {
-    background-position: 40% 50%;
-  }
-  25% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 40% 50%;
-  }
-  75% {
-    background-position: 50% 0%;
-  }
-  100% {
-    background-position: 40% 50%;
-  }
+/* * Modifying Tachyons */
+.bw2 {
+  border-width: .15rem !important;
+}
+/* adding this in Tachyons style */
+.mh-100 {
+  max-height: 100% !important;
+}
+/* * end */
+
+#error-messages-container {
+  --offset: 0;
+  bottom: -3.5rem;
+  transform: translateY(var(--offset));
 }
