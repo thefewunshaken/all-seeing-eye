@@ -60,7 +60,8 @@ const particlesOptions = {
       }
   }
 };
-const serverEndpoint = 'https://all-seeing-eye-api.herokuapp.com';
+const serverEndpoint = process.env.REACT_APP_SERVER_ENDPOINT;
+
 
 // https://api.time.com/wp-content/uploads/2017/12/terry-crews-person-of-year-2017-time-magazine-2.jpg
 
