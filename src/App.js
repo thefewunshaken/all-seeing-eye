@@ -10,17 +10,21 @@ import SignUp from './components/SignUp/SignUp';
 import './App.css';
 import Particles from 'react-particles-js';
 
-import { setImageUrl } from './actions';
+import { setImageUrl, fetchImageData } from './actions';
 
 const mapStateToProps = (state) => {
   return {
-    imageUrl: state.imageUrl
+    imageUrl: state.image.imageUrl,
+    isPending: state.image.isPending,
+    imageData: state.image.imageData,
+    error: state.image.error
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onInputChange: (event) => dispatch(setImageUrl(event.target.value))
+    onInputChange: (event) => dispatch(setImageUrl(event.target.value)),
+    onFetchImageData: () => dispatch(fetchImageData())
   }
 }
 
@@ -81,13 +85,12 @@ const serverEndpoint = process.env.REACT_APP_SERVER_ENDPOINT;
 // https://api.time.com/wp-content/uploads/2017/12/terry-crews-person-of-year-2017-time-magazine-2.jpg
 
 function App(props) {
-  const { onInputChange, imageUrl } = props;
+  const { onInputChange, onFetchImageData, imageUrl, imageData } = props;
   const [user, setUser] = useState({});
-  const [imageData, setImageData] = useState({});
+  // const [imageData, setImageData] = useState({});
   const [boundingBoxes, setBoundingBoxes] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [imageDataIsLoaded, setImageDataIsLoaded] = useState(false);
 
   useEffect(() => {
     
@@ -95,21 +98,27 @@ function App(props) {
       setIsSignedIn(false);
       setUser({});
       setBoundingBoxes('');
-      setImageData({});
-      setImageDataIsLoaded(false);
+      // setImageData({});
     } else {
       setIsSignedIn(true);
     }
   }, [route])
 
-  const calculateFaceLocation = results => {
+  useEffect(() => {
+    if (imageData) {
+      setBoundingBoxes(calculateFaceLocation());
+      updateUserEntires();
+    }
+  }, [imageData])
+
+  const calculateFaceLocation = () => {
     console.log('calculateFaceLocation called');
-    console.log(results);
+    console.log(imageData);
     let boundingBoxes = [];
     // data.regions[].data.concepts
     // data[2] is multicultural model
-    if (results[2].data.regions.length) {
-      results[2].data.regions.forEach(region => {
+    if (imageData[2].data.regions.length) {
+      imageData[2].data.regions.forEach(region => {
         boundingBoxes.push(region.region_info.bounding_box)
       });
     }
@@ -137,28 +146,12 @@ function App(props) {
     return boundingBoxes;
   }
 
-  const displayBoundingBoxOnFaces = boxArray => {
-    setBoundingBoxes(boxArray);
-  }
-
-  const postToClarifai = async () => {
+  const postImageUrlToClarifai = async () => {
     try {
-      const response = await fetch(`${serverEndpoint}/image`,
-        {
-          method: 'post',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ url: imageUrl })
-        }
-      );
-      const imageResults = await response.json();
-
-      setImageDataIsLoaded(true);
-      setImageData(imageResults);
-      displayBoundingBoxOnFaces(calculateFaceLocation(imageResults));
-
+      const data = await onFetchImageData();
+      return data;
     }
     catch (error) {
-      setImageDataIsLoaded(false);
       console.log(error);
     }
   }
@@ -166,8 +159,7 @@ function App(props) {
   const onPictureSubmit = () => {
     if (imageUrl) {
       console.log('onButtonSubmit called');
-      postToClarifai();
-      updateUserEntires();
+      postImageUrlToClarifai();
     }
   }
 
