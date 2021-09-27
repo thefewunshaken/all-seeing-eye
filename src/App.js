@@ -14,9 +14,10 @@ import { setImageUrl, fetchImageData } from './actions';
 
 const mapStateToProps = (state) => {
   return {
-    imageUrl: state.image.imageUrl,
+    imageUrl: state.image.url,
     isPending: state.image.isPending,
-    imageData: state.image.imageData,
+    imageData: state.image.data,
+    boundingBoxes: state.image.boundingBoxes,
     error: state.image.error
   };
 }
@@ -85,10 +86,10 @@ const serverEndpoint = process.env.REACT_APP_SERVER_ENDPOINT;
 // https://api.time.com/wp-content/uploads/2017/12/terry-crews-person-of-year-2017-time-magazine-2.jpg
 
 function App(props) {
-  const { onInputChange, onFetchImageData, imageUrl, imageData } = props;
+  const { onInputChange, onFetchImageData, imageUrl, imageData, boundingBoxes } = props;
   const [user, setUser] = useState({});
   // const [imageData, setImageData] = useState({});
-  const [boundingBoxes, setBoundingBoxes] = useState({});
+  // const [boundingBoxes, setBoundingBoxes] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
 
@@ -97,8 +98,6 @@ function App(props) {
     if (route.match(/^(?:sign)(?:out|in|up)/gm)) {
       setIsSignedIn(false);
       setUser({});
-      setBoundingBoxes('');
-      // setImageData({});
     } else {
       setIsSignedIn(true);
     }
@@ -106,45 +105,10 @@ function App(props) {
 
   useEffect(() => {
     if (imageData) {
-      setBoundingBoxes(calculateFaceLocation());
+      console.log(imageData);
       updateUserEntires();
     }
   }, [imageData])
-
-  const calculateFaceLocation = () => {
-    console.log('calculateFaceLocation called');
-    console.log(imageData);
-    let boundingBoxes = [];
-    // data.regions[].data.concepts
-    // data[2] is multicultural model
-    if (imageData[2].data.regions.length) {
-      imageData[2].data.regions.forEach(region => {
-        boundingBoxes.push(region.region_info.bounding_box)
-      });
-    }
-    // const clarifaiBoundingBox = data[2].data.regions[0].region_info.bounding_box;
-    
-    const image = document.getElementById('input-image');
-    // const width = Number(image.width);
-    // const height = Number(image.height);
-
-    // * API currently returns coords as decimal percentage values
-    boundingBoxes.forEach(box => {
-      box.left_col = `${box.left_col * 100}%`;
-      box.top_row = `${box.top_row * 100}%`;
-      box.right_col = `${(1 - box.right_col) * 100}%`;
-      box.bottom_row = `${(1 - box.bottom_row) * 100}%`;
-    })
-    // * leaving here in case API updates in the future to return coords as pixel value
-    // boundingBoxes.forEach(box => {
-    //   box.left_col = `${(box.left_col / width) * 100}%`;
-    //   box.top_row = `${(box.top_row / height) * 100}%`;
-    //   box.right_col = `${((width - box.right_col) / width) * 100}`;
-    //   box.bottom_row = `${((height - box.bottom_row) / height) * 100}`;
-    // })
-
-    return boundingBoxes;
-  }
 
   const postImageUrlToClarifai = async () => {
     try {
@@ -200,7 +164,7 @@ function App(props) {
             : <>
               <Rank user={user} />
               <ImageLinkForm onInputChange={onInputChange} onPictureSubmit={onPictureSubmit}/>
-              <FaceRecognition image={imageUrl} boundingBoxes={boundingBoxes}/>
+              <FaceRecognition imageUrl={imageUrl} boundingBoxes={boundingBoxes}/>
               <div className="tc">Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
             </>
       }

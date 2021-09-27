@@ -16,13 +16,13 @@ export const setImageUrl = (imageUrl) => {
 
 export const fetchImageData = () => async (dispatch, getState) => {
    dispatch({ type: actionTypes.REQUEST_IMAGE_DATA_PENDING });
-   const imageUrl = getState().image.imageUrl;
+   const url = getState().image.url;
    try {
       const response = await fetch(`${serverEndpoint}/image`,
       {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ url: imageUrl })
+      body: JSON.stringify({ url })
       }
       );
       const imageData = await response.json();
