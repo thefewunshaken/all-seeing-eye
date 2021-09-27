@@ -8,7 +8,7 @@ const FaceRecognition = ({ image, boundingBoxes }) => {
   console.log(image, boundingBoxes);
   return (
     <div className="relative flex justify-center w-75 center">
-          <div className="absolute mt2 mw-100">
+          <div className="mt2 mw-100">
               <img
                 src={image}
                 id="input-image"
