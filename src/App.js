@@ -164,7 +164,7 @@ function App(props) {
             : <>
               <Rank user={user} />
               <ImageLinkForm onInputChange={onInputChange} onPictureSubmit={onPictureSubmit}/>
-              <FaceRecognition image={imageUrl} boundingBoxes={boundingBoxes}/>
+              <FaceRecognition imageUrl={imageUrl} boundingBoxes={boundingBoxes}/>
               <div className="tc">Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
             </>
       }
