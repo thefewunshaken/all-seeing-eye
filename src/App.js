@@ -14,9 +14,9 @@ import { setImageUrl, fetchImageData } from './actions';
 
 const mapStateToProps = (state) => {
   return {
-    imageUrl: state.image.imageUrl,
+    imageUrl: state.image.url,
     isPending: state.image.isPending,
-    imageData: state.image.imageData,
+    imageData: state.image.data,
     error: state.image.error
   };
 }
