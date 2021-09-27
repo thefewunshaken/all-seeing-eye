@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
 import './index.css';
 import App from './App';
@@ -10,12 +11,13 @@ import 'tachyons';
 import { image } from './reducers';
 
 let store;
+const rootReducer = combineReducers({ image });
 
 if (process.env.NODE_ENV === 'development') {
   const logger = createLogger();
-  store = createStore(image, applyMiddleware(logger));
+  store = createStore(rootReducer, applyMiddleware(thunk, logger));
 } else {
-  store = createStore(image);
+  store = createStore(rootReducer, applyMiddleware(thunk));
 }
 
 
